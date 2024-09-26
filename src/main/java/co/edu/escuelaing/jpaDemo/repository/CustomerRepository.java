@@ -1,5 +1,6 @@
-package co.edu.escuelaing.jpaDemo.accessingdatajpa;
+package co.edu.escuelaing.jpaDemo.repository;
 
+import co.edu.escuelaing.jpaDemo.model.Customer;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

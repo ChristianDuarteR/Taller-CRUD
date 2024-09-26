@@ -1,4 +1,4 @@
-package co.edu.escuelaing.jpaDemo.accessingdatajpa;
+package co.edu.escuelaing.jpaDemo.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

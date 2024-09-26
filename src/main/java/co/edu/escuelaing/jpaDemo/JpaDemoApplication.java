@@ -1,7 +1,7 @@
 package co.edu.escuelaing.jpaDemo;
 
-import co.edu.escuelaing.jpaDemo.accessingdatajpa.Customer;
-import co.edu.escuelaing.jpaDemo.accessingdatajpa.CustomerRepository;
+import co.edu.escuelaing.jpaDemo.model.Customer;
+import co.edu.escuelaing.jpaDemo.repository.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
