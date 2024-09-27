@@ -1,12 +1,13 @@
 package co.edu.escuelaing.jpaDemo.services;
 
+import co.edu.escuelaing.jpaDemo.exception.BadRequestException;
+import co.edu.escuelaing.jpaDemo.exception.EntityNotFoundException;
 import co.edu.escuelaing.jpaDemo.model.RealEntity;
 import co.edu.escuelaing.jpaDemo.repository.RealEntityRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RealEntityService {
@@ -22,7 +23,46 @@ public class RealEntityService {
         return realEntities;
     }
 
-    public RealEntity createRealEntity(RealEntity realEntity) {
-        return realEntityRepository.save(realEntity);
+    public RealEntity createRealEntity(RealEntity realEntity) throws BadRequestException {
+        if (realEntity.getAddress()== null
+                || realEntity.getDescription() == null
+                || realEntity.getSize() < 0
+                || realEntity.getPrice() < 0 ){
+            throw new BadRequestException();
+        }else {
+            return realEntityRepository.save(realEntity);
+        }
+    }
+
+    public RealEntity update(Long id, RealEntity realEntityData) throws EntityNotFoundException, BadRequestException {
+        if (realEntityData.getAddress()== null
+                || realEntityData.getDescription() == null
+                || realEntityData.getSize() < 0
+                || realEntityData.getPrice() < 0 ){
+            throw new BadRequestException();
+        }else {
+            Optional<RealEntity> optionalRealEntity = realEntityRepository.findById(id);
+            if (optionalRealEntity.isPresent()) {
+                RealEntity realEntity = optionalRealEntity.get();
+                realEntity.setAddress(realEntityData.getAddress());
+                realEntity.setDescription(realEntityData.getDescription());
+                realEntity.setPrice(realEntityData.getPrice());
+                realEntity.setSize(realEntityData.getSize());
+                realEntityRepository.save(realEntity);
+                return realEntity;
+            } else {
+                throw new EntityNotFoundException(id);
+            }
+        }
+    }
+
+    public void delete(Long id) throws EntityNotFoundException {
+        Optional<RealEntity> optionalRealEntity = realEntityRepository.findById(id);
+        if (optionalRealEntity.isPresent()){
+            RealEntity realEntity = optionalRealEntity.get();
+            realEntityRepository.delete(realEntity);
+        }else {
+            throw new EntityNotFoundException(id);
+        }
     }
 }

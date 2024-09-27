@@ -1,13 +1,12 @@
 package co.edu.escuelaing.jpaDemo.controller;
 
+import co.edu.escuelaing.jpaDemo.exception.BadRequestException;
+import co.edu.escuelaing.jpaDemo.exception.EntityNotFoundException;
 import co.edu.escuelaing.jpaDemo.model.RealEntity;
 import co.edu.escuelaing.jpaDemo.services.RealEntityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,14 +24,45 @@ public class RealEntityController {
 
     @GetMapping
     public ResponseEntity<List<RealEntity>> getRealEntitys(){
-        List<RealEntity> realEntities = realEntityService.getUsers();
-        return ResponseEntity.ok(realEntities);
+        try {
+            List<RealEntity> realEntities = realEntityService.getUsers();
+            return ResponseEntity.ok(realEntities);
+        }catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
     public ResponseEntity<RealEntity> createRealEntity(@RequestBody RealEntity realEntity) throws URISyntaxException {
-        RealEntity real = realEntityService.createRealEntity(realEntity);
-        URI uri = new URI("api/realentitys" + real.getAddress());
-        return ResponseEntity.created(uri).body(real);
+        try {
+            RealEntity real = realEntityService.createRealEntity(realEntity);
+            URI uri = new URI("api/realentitys" + real.getAddress());
+            return ResponseEntity.created(uri).body(real);
+        }catch (BadRequestException e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<RealEntity> updateRealEntity(@PathVariable Long id, @RequestBody RealEntity realEntityData){
+        try {
+            RealEntity real = realEntityService.update(id, realEntityData);
+            URI uri = new URI("api/realentitys" + realEntityData.getAddress());
+            return ResponseEntity.created(uri).body(real);
+        }catch (BadRequestException e){
+            return ResponseEntity.badRequest().build();
+        }catch (EntityNotFoundException | URISyntaxException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<RealEntity> deleteRealEntity(@PathVariable Long id){
+        try {
+            realEntityService.delete(id);
+            return ResponseEntity.noContent().build();
+        }catch (EntityNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 }
