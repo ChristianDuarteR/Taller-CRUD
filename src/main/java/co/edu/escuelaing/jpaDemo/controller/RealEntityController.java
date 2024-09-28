@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/realentitys")
+@RequestMapping("/api/v1/realentitys")
 public class RealEntityController {
 
     private final  RealEntityService realEntityService;
@@ -36,7 +36,7 @@ public class RealEntityController {
     public ResponseEntity<RealEntity> createRealEntity(@RequestBody RealEntity realEntity) throws URISyntaxException {
         try {
             RealEntity real = realEntityService.createRealEntity(realEntity);
-            URI uri = new URI("api/realentitys" + real.getAddress());
+            URI uri = new URI("api/v1/realentitys" + real.getId());
             return ResponseEntity.created(uri).body(real);
         }catch (BadRequestException e){
             return ResponseEntity.badRequest().build();
@@ -47,7 +47,7 @@ public class RealEntityController {
     public ResponseEntity<RealEntity> updateRealEntity(@PathVariable Long id, @RequestBody RealEntity realEntityData){
         try {
             RealEntity real = realEntityService.update(id, realEntityData);
-            URI uri = new URI("api/realentitys" + realEntityData.getAddress());
+            URI uri = new URI("api/v1/realentitys" + realEntityData.getAddress());
             return ResponseEntity.created(uri).body(real);
         }catch (BadRequestException e){
             return ResponseEntity.badRequest().build();

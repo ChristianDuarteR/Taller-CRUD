@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Página de Entidades 100% Reales</title>
+        <link rel="stylesheet" href="/style.css">
+        <script src="/script.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    </head>
+    <body>
+    <header>
+        <h2>Gestión de Entidades Reales</h2>
+    </header>
+    <main>
+        <h1>Aquí puede realizar operaciones CRUD sobre las entidades reales actuales</h1>
+
+        <section>
+            <h3>Lista de Entidades</h3>
+            <button type="button" onclick="getEntidades()">Obtener Todas las Entidades</button>
+            <ul id="entidades-lista">
+                <!-- Aquí se mostrarán las entidades -->
+            </ul>
+        </section>
+
+        <section>
+            <h3>Crear nueva entidad</h3>
+            <form id="crearEntidadForm" onsubmit="return false">
+                <label for="address">Dirección:</label>
+                <input type="text" id="address" required placeholder="Ingrese la dirección" />
+
+                <label for="price">Precio:</label>
+                <input type="number" id="price" required min="0" placeholder="Ingrese el precio" />
+
+                <label for="size">Tamaño:</label>
+                <input type="number" id="size" required min="0" placeholder="Ingrese el tamaño" />
+
+                <label for="description">Descripción:</label>
+                <input type="text" id="description" required placeholder="Ingrese la descripción" />
+
+                <button type="button" onclick="createEntity()">Crear Entidad</button>
+            </form>
+        </section>
+
+        <section>
+            <h3>Actualizar entidad</h3>
+            <form id="actualizarEntidadForm" onsubmit="return false">
+                <label for="idUpdate">ID de la entidad:</label>
+                <input type="number" id="idUpdate" required min="1" placeholder="Ingrese el ID" />
+
+                <label for="addressUpdate">Dirección:</label>
+                <input type="text" id="addressUpdate" required placeholder="Ingrese la nueva dirección" />
+
+                <label for="priceUpdate">Precio:</label>
+                <input type="number" id="priceUpdate" required min="0" placeholder="Ingrese el nuevo precio" />
+
+                <label for="sizeUpdate">Tamaño:</label>
+                <input type="number" id="sizeUpdate" required min="0" placeholder="Ingrese el nuevo tamaño" />
+
+                <label for="descriptionUpdate">Descripción:</label>
+                <input type="text" id="descriptionUpdate" required placeholder="Ingrese la nueva descripción" />
+
+                <button type="button" onclick="updateEntity()">Actualizar Entidad</button>
+            </form>
+        </section>
+
+        <section>
+            <h3>Eliminar entidad</h3>
+            <form id="eliminarEntidadForm" onsubmit="return false">
+                <label for="id">ID de la entidad:</label>
+                <input type="number" id="id" required min="1" placeholder="Ingrese el ID de la entidad a eliminar" />
+                <button type="button" onclick="deleteEntity()">Eliminar Entidad</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Página de Entidades 100% Reales por Christian</p>
+    </footer>
+    </body>
+</html>
