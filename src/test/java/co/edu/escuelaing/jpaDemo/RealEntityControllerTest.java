@@ -43,7 +43,7 @@ public class RealEntityControllerTest {
 		when(realEntityService.getRealEntities()).thenReturn(realEntities);
 
 		// Act
-		ResponseEntity<List<RealEntity>> response = realEntityController.getRealEntitys();
+		ResponseEntity<List<RealEntity>> response = realEntityController.getAllEntities();
 
 		// Assert
 		assertEquals(HttpStatus.OK, response.getStatusCode());

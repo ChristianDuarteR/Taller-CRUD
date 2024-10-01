@@ -1,28 +1,105 @@
-function getEntidades() {
-    fetch('/api/v1/realentitys', {
+let currentPage = 0;
+let totalPages = 0;
+function getEntidades(page) {
+    currentPage = page;
+    const addressFilter = document.getElementById('filterAddress').value;
+    const priceFilter = document.getElementById('filterPrice').value;
+    const sizeFilter = document.getElementById('filterSize').value;
+    const minPrice = priceFilter ? priceFilter : 0; // Si no se proporciona, usa 0
+    const maxPrice = priceFilter ? priceFilter : 1000000; // Puedes ajustar esto según tu lógica
+    const minSize = sizeFilter ? sizeFilter : 0; // Si no se proporciona, usa 0
+    const maxSize = sizeFilter ? sizeFilter : 1000; // Puedes ajustar esto según tu lógica
+
+    const url = `/api/v1/realentitys?page=${currentPage}&address=${addressFilter}&minPrice=${minPrice}&maxPrice=${maxPrice}&minSize=${minSize}&maxSize=${maxSize}`;
+
+
+    fetch(url, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
-            const lista = document.getElementById('entidades-lista');
-            lista.innerHTML = '';
-
-            data.forEach(realEntity => {
-                const item = document.createElement('li');
-
-                item.innerHTML = `
-                <strong>ID:</strong> ${realEntity.id} <br>
-                <strong>Dirección:</strong> ${realEntity.address} <br>
-                <strong>Precio:</strong> ${realEntity.price} <br>
-                <strong>Tamaño:</strong> ${realEntity.size} m² <br>
-                <strong>Descripción:</strong> ${realEntity.description}
-            `;
-
-                lista.appendChild(item);
-            });
+            totalPages = data.totalPages;
+            renderEntidades(data.content);
+            updatePagination();
         })
         .catch(error => console.error('Error obteniendo entidades:', error));
 }
+
+function renderEntidades(entidades) {
+    const lista = document.getElementById('entidades-lista');
+    lista.innerHTML = '';
+
+    if (entidades.length === 0) {
+        lista.innerHTML = '<li>No se encontraron entidades.</li>';
+        return;
+    }
+
+    entidades.forEach(entidad => {
+        const li = document.createElement('li');
+        li.textContent = `ID: ${entidad.id}, Dirección: ${entidad.address}, Precio: ${entidad.price}, Tamaño: ${entidad.size}, Descripción: ${entidad.description}`;
+        lista.appendChild(li);
+    });
+}
+
+function updatePagination() {
+    const pageInfo = document.getElementById('pageInfo');
+    pageInfo.textContent = `Página ${currentPage + 1} de ${totalPages}`;
+
+    document.getElementById('prevPage').disabled = currentPage === 0;
+    document.getElementById('nextPage').disabled = currentPage === totalPages - 1;
+}
+
+function changePage(newPage) {
+    if (newPage < 0 || newPage >= totalPages) return;
+    getEntidades(newPage);
+}
+
+function applyFilters() {
+    getEntidades(0);
+}
+
+
+
+function validateCreate() {
+    const address = document.getElementById('address').value.trim();
+    const price = parseFloat(document.getElementById('price').value);
+    const size = parseFloat(document.getElementById('size').value);
+    const description = document.getElementById('description').value.trim();
+
+    if (!address || !description || isNaN(price) || price <= 0 || isNaN(size) || size <= 0) {
+        Swal.fire({
+            title: 'Advertencia',
+            text: 'Porfavor verifique los campos e intente nuevamente',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+
+    createEntity(address, price, size, description);
+}
+
+function validateUpdate() {
+    const id = parseInt(document.getElementById('idUpdate').value);
+    const address = document.getElementById('addressUpdate').value.trim();
+    const price = parseFloat(document.getElementById('priceUpdate').value);
+    const size = parseFloat(document.getElementById('sizeUpdate').value);
+    const description = document.getElementById('descriptionUpdate').value.trim();
+
+    if (isNaN(id) || id <= 0 || !address || !description || isNaN(price) || price <= 0 || isNaN(size) || size <= 0) {
+        Swal.fire({
+            title: 'Advertencia',
+            text: 'Porfavor verifique los campos e intente nuevamente',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+
+    updateEntity(id, address, price, size, description);
+}
+
+
 function createEntity() {
     const address = document.getElementById('address').value;
     const price = document.getElementById('price').value;

@@ -4,6 +4,8 @@ import co.edu.escuelaing.jpaDemo.exception.BadRequestException;
 import co.edu.escuelaing.jpaDemo.exception.EntityNotFoundException;
 import co.edu.escuelaing.jpaDemo.model.RealEntity;
 import co.edu.escuelaing.jpaDemo.services.RealEntityService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,8 @@ public class RealEntityController {
         this.realEntityService = realEntityService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<RealEntity>> getRealEntitys(){
+    @GetMapping("/test")
+    public ResponseEntity<List<RealEntity>> getAllEntities(){
         try {
             List<RealEntity> realEntities = realEntityService.getRealEntities();
             return ResponseEntity.ok(realEntities);
@@ -31,6 +33,23 @@ public class RealEntityController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping()
+    public ResponseEntity<Page<RealEntity>> getRealEntities(
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false, defaultValue = "0") int minPrice,
+            @RequestParam(required = false, defaultValue = "1000000") int maxPrice,
+            @RequestParam(required = false, defaultValue = "0") int minSize,
+            @RequestParam(required = false, defaultValue = "1000") int maxSize,
+            Pageable pageable) {
+        try {
+            Page<RealEntity> realEntities = realEntityService.getFilteredRealEntities(address, minPrice, maxPrice, minSize, maxSize, pageable);
+            return ResponseEntity.ok(realEntities);
+        }catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @PostMapping
     public ResponseEntity<RealEntity> createRealEntity(@RequestBody RealEntity realEntity) throws URISyntaxException {

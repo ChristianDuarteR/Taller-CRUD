@@ -4,8 +4,9 @@ import co.edu.escuelaing.jpaDemo.exception.BadRequestException;
 import co.edu.escuelaing.jpaDemo.exception.EntityNotFoundException;
 import co.edu.escuelaing.jpaDemo.model.RealEntity;
 import co.edu.escuelaing.jpaDemo.repository.RealEntityRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +19,14 @@ public class RealEntityService {
         this.realEntityRepository = realEntityRepository;
     }
 
+
+    public Page<RealEntity> getFilteredRealEntities(String location, Integer minPrice, Integer maxPrice, Integer minSize, Integer maxSize, Pageable pageable) {
+        return realEntityRepository.findByAddressContainingAndPriceBetweenAndSizeBetween(
+                location, minPrice, maxPrice, minSize, maxSize, pageable);
+    }
+
     public List<RealEntity> getRealEntities() {
-        List<RealEntity> realEntities = (List<RealEntity>) realEntityRepository.findAll();
+        List<RealEntity> realEntities = realEntityRepository.findAll();
         return realEntities;
     }
 

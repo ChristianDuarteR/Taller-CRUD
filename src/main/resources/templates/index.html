@@ -16,10 +16,30 @@
 
         <section>
             <h3>Lista de Entidades</h3>
-            <button type="button" onclick="getEntidades()">Obtener Todas las Entidades</button>
+            <button type="button" onclick="getEntidades(0)">Obtener Todas las Entidades</button>
+            <!-- Filtros -->
+            <div>
+                <label for="filterAddress">Filtrar por Dirección:</label>
+                <input type="text" id="filterAddress" placeholder="Ingrese la dirección" />
+
+                <label for="filterPrice">Filtrar por Precio:</label>
+                <input type="number" id="filterPrice" min="0" placeholder="Ingrese el precio (Pesos Colombianos)" />
+
+                <label for="filterSize">Filtrar por Tamaño:</label>
+                <input type="number" id="filterSize" min="0" placeholder="Ingrese el tamaño (Metros Cuadrados)" />
+
+                <button type="button" onclick="applyFilters()">Filtrar</button>
+            </div>
+
             <ul id="entidades-lista">
                 <!-- Aquí se mostrarán las entidades -->
             </ul>
+
+            <div id="pagination">
+                <button id="prevPage" onclick="changePage(currentPage - 1)">Anterior</button>
+                <span id="pageInfo">Página 1</span>
+                <button id="nextPage" onclick="changePage(currentPage + 1)">Siguiente</button>
+            </div>
         </section>
 
         <section>
@@ -37,7 +57,7 @@
                 <label for="description">Descripción:</label>
                 <input type="text" id="description" required placeholder="Ingrese la descripción" />
 
-                <button type="button" onclick="createEntity()">Crear Entidad</button>
+                <button type="button" onclick="validateCreate()">Crear Entidad</button>
             </form>
         </section>
 
@@ -59,7 +79,7 @@
                 <label for="descriptionUpdate">Descripción:</label>
                 <input type="text" id="descriptionUpdate" required placeholder="Ingrese la nueva descripción" />
 
-                <button type="button" onclick="updateEntity()">Actualizar Entidad</button>
+                <button type="button" onclick="validateUpdate()">Actualizar Entidad</button>
             </form>
         </section>
 
