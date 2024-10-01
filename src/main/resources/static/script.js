@@ -1,6 +1,6 @@
 let currentPage = 0;
 let totalPages = 0;
-function getEntidades(page) {
+function getEntities(page) {
     currentPage = page;
     const addressFilter = document.getElementById('filterAddress').value;
     const priceFilter = document.getElementById('filterPrice').value;
@@ -20,13 +20,13 @@ function getEntidades(page) {
         .then(data => {
             console.log(data);
             totalPages = data.totalPages;
-            renderEntidades(data.content);
+            renderEntities(data.content);
             updatePagination();
         })
         .catch(error => console.error('Error obteniendo entidades:', error));
 }
 
-function renderEntidades(entidades) {
+function renderEntities(entidades) {
     const lista = document.getElementById('entidades-lista');
     lista.innerHTML = '';
 
@@ -37,7 +37,14 @@ function renderEntidades(entidades) {
 
     entidades.forEach(entidad => {
         const li = document.createElement('li');
-        li.textContent = `ID: ${entidad.id}, Dirección: ${entidad.address}, Precio: ${entidad.price}, Tamaño: ${entidad.size}, Descripción: ${entidad.description}`;
+        li.classList.add('entidad-card');
+        li.innerHTML = `
+            <div class="entidad-header">${entidad.address}</div>
+            <div class="entidad-info"><span>Precio:</span> ${entidad.price} COP</div>
+            <div class="entidad-info"><span>Tamaño:</span> ${entidad.size} m²</div>
+            <div class="entidad-info"><span>Descripción:</span> ${entidad.description}</div>
+            </div>
+        `;
         lista.appendChild(li);
     });
 }
@@ -53,11 +60,11 @@ function updatePagination() {
 function changePage(newPage) {
     console.log(newPage);
     if (newPage < 0 || newPage >= totalPages) return;
-    getEntidades(newPage);
+    getEntities(newPage);
 }
 
 function applyFilters() {
-    getEntidades(0);
+    getEntities(0);
 }
 
 
@@ -208,4 +215,3 @@ function deleteEntity() {
         })
         .catch(error => console.error('Error eliminando entidad:', error));
 }
-
