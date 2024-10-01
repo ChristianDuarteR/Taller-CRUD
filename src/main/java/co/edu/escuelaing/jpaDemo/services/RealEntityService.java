@@ -18,7 +18,7 @@ public class RealEntityService {
         this.realEntityRepository = realEntityRepository;
     }
 
-    public List<RealEntity> getUsers() {
+    public List<RealEntity> getRealEntities() {
         List<RealEntity> realEntities = (List<RealEntity>) realEntityRepository.findAll();
         return realEntities;
     }
@@ -34,7 +34,7 @@ public class RealEntityService {
         }
     }
 
-    public RealEntity update(Long id, RealEntity realEntityData) throws EntityNotFoundException, BadRequestException {
+    public RealEntity updateRealEntity(Long id, RealEntity realEntityData) throws EntityNotFoundException, BadRequestException {
         if (realEntityData.getAddress()== null
                 || realEntityData.getDescription() == null
                 || realEntityData.getSize() < 0
@@ -56,7 +56,7 @@ public class RealEntityService {
         }
     }
 
-    public void delete(Long id) throws EntityNotFoundException {
+    public void deleteRealEntity(Long id) throws EntityNotFoundException {
         Optional<RealEntity> optionalRealEntity = realEntityRepository.findById(id);
         if (optionalRealEntity.isPresent()){
             RealEntity realEntity = optionalRealEntity.get();

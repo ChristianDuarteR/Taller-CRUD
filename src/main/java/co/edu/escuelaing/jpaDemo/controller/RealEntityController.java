@@ -25,7 +25,7 @@ public class RealEntityController {
     @GetMapping
     public ResponseEntity<List<RealEntity>> getRealEntitys(){
         try {
-            List<RealEntity> realEntities = realEntityService.getUsers();
+            List<RealEntity> realEntities = realEntityService.getRealEntities();
             return ResponseEntity.ok(realEntities);
         }catch (Exception e){
             return ResponseEntity.notFound().build();
@@ -36,7 +36,7 @@ public class RealEntityController {
     public ResponseEntity<RealEntity> createRealEntity(@RequestBody RealEntity realEntity) throws URISyntaxException {
         try {
             RealEntity real = realEntityService.createRealEntity(realEntity);
-            URI uri = new URI("api/v1/realentitys" + real.getId());
+            URI uri = new URI("api/v1/realentitys/" + real.getId());
             return ResponseEntity.created(uri).body(real);
         }catch (BadRequestException e){
             return ResponseEntity.badRequest().build();
@@ -46,8 +46,8 @@ public class RealEntityController {
     @PutMapping("{id}")
     public ResponseEntity<RealEntity> updateRealEntity(@PathVariable Long id, @RequestBody RealEntity realEntityData){
         try {
-            RealEntity real = realEntityService.update(id, realEntityData);
-            URI uri = new URI("api/v1/realentitys" + realEntityData.getAddress());
+            RealEntity real = realEntityService.updateRealEntity(id, realEntityData);
+            URI uri = new URI("api/v1/realentitys/" + realEntityData.getId());
             return ResponseEntity.created(uri).body(real);
         }catch (BadRequestException e){
             return ResponseEntity.badRequest().build();
@@ -59,7 +59,7 @@ public class RealEntityController {
     @DeleteMapping("{id}")
     public ResponseEntity<RealEntity> deleteRealEntity(@PathVariable Long id){
         try {
-            realEntityService.delete(id);
+            realEntityService.deleteRealEntity(id);
             return ResponseEntity.noContent().build();
         }catch (EntityNotFoundException e){
             return ResponseEntity.notFound().build();
