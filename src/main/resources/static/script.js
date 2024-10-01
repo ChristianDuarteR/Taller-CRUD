@@ -40,6 +40,7 @@ function renderEntities(entidades) {
         li.classList.add('entidad-card');
         li.innerHTML = `
             <div class="entidad-header">${entidad.address}</div>
+            <div class="entidad-info"><span>Id:</span> ${entidad.id}</div>
             <div class="entidad-info"><span>Precio:</span> ${entidad.price} COP</div>
             <div class="entidad-info"><span>Tamaño:</span> ${entidad.size} m²</div>
             <div class="entidad-info"><span>Descripción:</span> ${entidad.description}</div>
@@ -176,14 +177,21 @@ function updateEntity() {
             description: description
         })
     })
-        .then(response => response.json())
-        .then(data => {
-            Swal.fire({
-                title: 'Actualizado',
-                text: 'Entidad actualizada con éxito',
-                icon: 'success',
-                confirmButtonText: 'Aceptar'
-            });
+        .then(response => {
+            if (response.ok) {
+                Swal.fire({
+                    title: 'Actualizada',
+                    text: 'Entidad Actualizada Con exito',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Entidad NO pudo ser Actualizada verifique los datos porfavor',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });            }
         })
         .catch(error => console.error('Error actualizando entidad:', error));
 }
