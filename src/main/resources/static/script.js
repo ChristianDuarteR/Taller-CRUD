@@ -5,10 +5,10 @@ function getEntidades(page) {
     const addressFilter = document.getElementById('filterAddress').value;
     const priceFilter = document.getElementById('filterPrice').value;
     const sizeFilter = document.getElementById('filterSize').value;
-    const minPrice = priceFilter ? priceFilter : 0; // Si no se proporciona, usa 0
-    const maxPrice = priceFilter ? priceFilter : 1000000; // Puedes ajustar esto según tu lógica
-    const minSize = sizeFilter ? sizeFilter : 0; // Si no se proporciona, usa 0
-    const maxSize = sizeFilter ? sizeFilter : 1000; // Puedes ajustar esto según tu lógica
+    const minPrice = priceFilter ? priceFilter : 0;
+    const maxPrice = priceFilter ? priceFilter : 1000000;
+    const minSize = sizeFilter ? sizeFilter : 0;
+    const maxSize = sizeFilter ? sizeFilter : 1000;
 
     const url = `/api/v1/realentitys?page=${currentPage}&address=${addressFilter}&minPrice=${minPrice}&maxPrice=${maxPrice}&minSize=${minSize}&maxSize=${maxSize}`;
 
@@ -18,6 +18,7 @@ function getEntidades(page) {
     })
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             totalPages = data.totalPages;
             renderEntidades(data.content);
             updatePagination();
@@ -50,6 +51,7 @@ function updatePagination() {
 }
 
 function changePage(newPage) {
+    console.log(newPage);
     if (newPage < 0 || newPage >= totalPages) return;
     getEntidades(newPage);
 }
@@ -119,7 +121,17 @@ function createEntity() {
             description: description
         })
     })
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Entidad NO pudo ser creada',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });            }
+        })
         .then(data => {
             Swal.fire({
                 title: 'Creada',
@@ -128,7 +140,15 @@ function createEntity() {
                 confirmButtonText: 'Aceptar'
             });
         })
-        .catch(error => console.error('Error creando entidad:', error));
+        .catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al crear la entidad',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+            console.error('Error creando entidad:', error);
+        });
 }
 
 function updateEntity() {

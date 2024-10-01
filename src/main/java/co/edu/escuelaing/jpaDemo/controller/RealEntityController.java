@@ -5,6 +5,7 @@ import co.edu.escuelaing.jpaDemo.exception.EntityNotFoundException;
 import co.edu.escuelaing.jpaDemo.model.RealEntity;
 import co.edu.escuelaing.jpaDemo.services.RealEntityService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -43,6 +44,9 @@ public class RealEntityController {
             @RequestParam(required = false, defaultValue = "1000") int maxSize,
             Pageable pageable) {
         try {
+            if (pageable.getPageSize() > 10) {
+                pageable = PageRequest.of(pageable.getPageNumber(), 10);
+            }
             Page<RealEntity> realEntities = realEntityService.getFilteredRealEntities(address, minPrice, maxPrice, minSize, maxSize, pageable);
             return ResponseEntity.ok(realEntities);
         }catch (Exception e){
